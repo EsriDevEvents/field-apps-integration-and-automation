@@ -2,7 +2,7 @@
 
 Automate task archiving, worker offboarding, and contractor registration workflows using the ArcGIS API for Python and Jupyter notebooks.
 
-You will need four ArcGIS Feature Layers for this to work: 
+You will need three ArcGIS Feature Layers for this to work: 
 
 1. Registration Layer - Survey123 Form
 2. Source Layer - Tasks Feature Layer
@@ -22,7 +22,7 @@ Clone or download this project, then initialize it:
 
 ```bash
 # Navigate to the project directory
-cd field-apps-integration-and-automation
+cd field-apps-integration-and-automation/Python\ notebooks/
 
 # Install dependencies and create the virtual environment
 uv sync
