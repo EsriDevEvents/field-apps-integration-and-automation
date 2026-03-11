@@ -59,6 +59,8 @@ uv run jupyter notebook "Contractor Registration WF.ipynb"
 uv run jupyter notebook "Tasks Clean Up.ipynb"
 ```
 
+Or cell by cell in your IDE of choice.
+
 ---
 
 ## Project Structure
@@ -126,7 +128,7 @@ This notebook does **not** store or auto-generate credentials. Instead, credenti
 
 ### Option A — OS Keyring *(recommended for local/server environments)*
 
-Passwords are stored in the OS-native secret store (macOS Keychain, Windows Credential Manager, Linux Secret Service) and never written to disk.
+Passwords are stored in the OS-native secret store. Consider the password as a one-time onboarding password with a strict expiration. Make this password valid only for a short time period and invalidate it when not in use. Consider working with your IT to ensure this complies with your team's needs.
 
 ```python
 # Store once (run this in a terminal or separate setup cell, not in the notebook itself):
@@ -135,31 +137,27 @@ keyring.set_password("arcgis_notebook", "TEMPORARY_PASSWORD", "your-secure-passw
 ```
 
 ```python
-# Retrieve at runtime:
+# Run this once (run this in a terminal or separate setup cell, not in the notebook itself). Delete the password after your mobile worker creates their account with their own password:
 import keyring
-password = keyring.get_password("arcgis_notebook", "TEMPORARY_PASSWORD")
+keyring.delete_password("arcgis_notebook", "TEMPORARY_PASSWORD")
 ```
-
-> **This notebook defaults to Option A.** If `keyring` is unavailable (e.g. a hosted cloud environment with no OS secret store), it falls back to Option B automatically.
 
 ---
 
-### Option B — `.env` File *(fallback for hosted AGOL environments)*
+### Option B — `.env` File *(for when testing in hosted AGOL environments)*
 
-A `.env` file keeps secrets out of the notebook and out of version control. This is the fallback when the OS keyring is not available.
+A `.env` file keeps secrets out of the notebook and out of version control.
 
 **Create a `.env` file in the same directory as this notebook:**
 
 ```
-# .env  — example values, replace with real credentials
-# ⚠️  Add .env to your .gitignore — never commit this file
-# Change this value periodically
+# ⚠️  Only go for this option for testing purposes, not for production deployments
 
 TEMPORARY_PASSWORD=ExamplePass!2024
 ```
 
 
-> **Security note:** The `.env` file exists in your arcgis/home directory. Consider using keyring to ensure best security practices.
+> **Note:** When testing, the `.env` file can exist in your arcgis/home directory. 
 
 
 ## Notebook Workflows
@@ -176,23 +174,19 @@ Automates contractor onboarding:
 **To use:**
 1. Configure the `CONFIG` cell with your layer URLs and field names
 2. Run cells top to bottom or run as an hourly script
-3. Monitor logs for success/failure messages
-
 ---
 
 ### **Tasks Clean Up.ipynb**
 
 Automates worker offboarding:
-1. Queries credentials layer for workers flagged with `delete_today = YES`
-2. Archives their completed tasks to a backup layer
-3. Copies all attachments (images, PDFs) to archive records
-4. Deletes originals from the active task layer
-5. Removes the worker's ArcGIS Online account
+1. Archives their completed tasks to a backup layer
+2. Copies all attachments (images, PDFs) to archive records
+3. Deletes originals from the active task layer
+4. Removes the worker's ArcGIS Online account after each day
 
 **To use:**
 1. Configure layer URLs in the `CONFIG` cell
 2. Run cells top to bottom or run as an hourly script
-3. Review the final summary
 
 ---
 

@@ -10,7 +10,6 @@ The demo showcases a seamless integration between Python scripts and Power Autom
 
 1. **Contractor Registration (Python Notebook)** - Polls at an interval of your choosing
    - Initializes contractor data, assign tasks and registers new contractors in the system after they submitted a Survey123 form.
-   - Adds the user to the credentials table.
 
 2. **Send Teams message when tasks is ready flow (Power Automate)** - Automatically triggered
    - Responds to the python notebook above letting the mobile worker know that they can begin their tasks for the day
@@ -19,8 +18,7 @@ The demo showcases a seamless integration between Python scripts and Power Autom
    - After the mobile worker finishes the day and complete and exit Survey123 form a report is automatically generated and added to the Task Layer.
 
 4. **Tasks Clean Up (Python Notebook)** - Polls at an interval of your choosing
-   - Transfers data from your tasks layer to the archived task layer
-   - Looks at the credentials table to see if that user should be deleted from the Org
+     - Transfers data from your tasks layer to the archived task layer
 
 
 ## Power Automate vs Python: When to Use Each
