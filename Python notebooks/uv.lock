@@ -78,12 +78,13 @@ wheels = [
 ]
 
 [[package]]
-name = "arcgis-offboarding"
+name = "arcgis-automation"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "arcgis" },
     { name = "ipykernel" },
+    { name = "keyring" },
     { name = "notebook" },
     { name = "pandas" },
 ]
@@ -92,6 +93,7 @@ dependencies = [
 requires-dist = [
     { name = "arcgis", specifier = ">=2.3.0" },
     { name = "ipykernel", specifier = ">=6.0.0" },
+    { name = "keyring", specifier = ">=25.7.0" },
     { name = "notebook", specifier = ">=7.0.0" },
     { name = "pandas", specifier = ">=2.0.0" },
 ]

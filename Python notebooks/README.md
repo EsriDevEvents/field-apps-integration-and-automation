@@ -7,7 +7,6 @@ You will need four ArcGIS Feature Layers for this to work:
 1. Registration Layer - Survey123 Form
 2. Source Layer - Tasks Feature Layer
 3. Archive Layer - Tasks Feature Layer (same schema as source)
-4. Credentials Layer - Contractor credentials with a "delete_today" field 
 
 ## Quick Start
 
@@ -72,29 +71,16 @@ dev-summit/
 ├── uv.lock                        # Locked dependency versions
 ├── pyproject.toml                 # Project metadata & dependencies
 ├── README.md                      # This file
-├── Contractor Registration WF.ipynb   # Onboarding automation
-└── Tasks Clean Up.ipynb               # Archiving & offboarding
+├── Contractor Registration Flow.ipynb   # Onboarding automation
+└── Tasks Archiving and Worker Offboarding.ipynb               # Archiving & offboarding
 ```
 
-### Key Files
-
-- **`pyproject.toml`** — Defines project dependencies:
-  - `arcgis>=2.3.0` — ArcGIS API for Python
-  - `pandas>=2.0.0` — Data manipulation
-  - `notebook>=7.0.0` — Jupyter notebook support
-  - `ipykernel>=6.0.0` — Jupyter kernel
-
-- **`uv.lock`** — Reproducible lockfile (check into version control)
-
-- **`.python-version`** — Specifies Python version for the project
-
----
 
 ## ArcGIS Online Authentication
 
 The notebooks support multiple authentication methods. Choose the one that suits your setup.
 
-### 1. **Home Profile (Recommended for Local Development)**
+### 1. **Home Profile**
 
 If you are running in the Hosted ArcGIS Online/Enterprise Environment, use:
 
@@ -109,7 +95,7 @@ print(f"Logged in as: {gis.properties.user.username}")
 
 ### 2. **Built-In User Account**
 
-For ArcGIS Online or Enterprise with built-in identity:
+For ArcGIS Online or Enterprise on your local machine with built-in identity:
 
 ```python
 gis = GIS('https://www.arcgis.com', 'username', 'password')
@@ -134,6 +120,47 @@ print(f"Using active portal from ArcGIS Pro: {gis.properties.portalHostname}")
 
 ---
 
+## Credential Security
+
+This notebook does **not** store or auto-generate credentials. Instead, credentials for creating temporary passwords for your mobile workers are loaded at runtime using one of two approaches — chosen based on your environment:
+
+### Option A — OS Keyring *(recommended for local/server environments)*
+
+Passwords are stored in the OS-native secret store (macOS Keychain, Windows Credential Manager, Linux Secret Service) and never written to disk.
+
+```python
+# Store once (run this in a terminal or separate setup cell, not in the notebook itself):
+import keyring
+keyring.set_password("arcgis_notebook", "TEMPORARY_PASSWORD", "your-secure-password")
+```
+
+```python
+# Retrieve at runtime:
+import keyring
+password = keyring.get_password("arcgis_notebook", "TEMPORARY_PASSWORD")
+```
+
+> **This notebook defaults to Option A.** If `keyring` is unavailable (e.g. a hosted cloud environment with no OS secret store), it falls back to Option B automatically.
+
+---
+
+### Option B — `.env` File *(fallback for hosted AGOL environments)*
+
+A `.env` file keeps secrets out of the notebook and out of version control. This is the fallback when the OS keyring is not available.
+
+**Create a `.env` file in the same directory as this notebook:**
+
+```
+# .env  — example values, replace with real credentials
+# ⚠️  Add .env to your .gitignore — never commit this file
+# Change this value periodically
+
+TEMPORARY_PASSWORD=ExamplePass!2024
+```
+
+
+> **Security note:** The `.env` file exists in your arcgis/home directory. Consider using keyring to ensure best security practices.
+
 
 ## Notebook Workflows
 
@@ -143,9 +170,8 @@ Automates contractor onboarding:
 1. Reads new contractor registrations from Survey123
 2. Checks for duplicate accounts in ArcGIS Online
 3. Creates a new Data Editor / Mobile Worker account
-4. Saves credentials to a hosted table
-5. Adds the user to a configured group
-6. Automatically assigns unassigned tasks at their site
+4. Adds the user to a configured group
+5. Automatically assigns unassigned tasks at their site
 
 **To use:**
 1. Configure the `CONFIG` cell with your layer URLs and field names
@@ -164,10 +190,9 @@ Automates worker offboarding:
 5. Removes the worker's ArcGIS Online account
 
 **To use:**
-1. Flag workers in your credentials layer: set `delete_today = YES`
-2. Configure layer URLs in the `CONFIG` cell
-3. Run cells top to bottom or run as an hourly script
-4. Review the final summary
+1. Configure layer URLs in the `CONFIG` cell
+2. Run cells top to bottom or run as an hourly script
+3. Review the final summary
 
 ---
 

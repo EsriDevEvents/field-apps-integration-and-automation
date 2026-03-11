@@ -5,8 +5,9 @@ description = "Task archiving and worker offboarding automation for ArcGIS Onlin
 requires-python = ">=3.10"
 
 dependencies = [
-    "arcgis>=2.3.0",       # ArcGIS API for Python — provides GIS, FeatureLayer, Feature
-    "pandas>=2.0.0",       # Data manipulation — used for tabular results
-    "notebook>=7.0.0",     # Runs Jupyter notebooks locally
-    "ipykernel>=6.0.0",    # Connects your Python environment to Jupyter
+    "arcgis>=2.3.0", # ArcGIS API for Python — provides GIS, FeatureLayer, Feature
+    "pandas>=2.0.0", # Data manipulation — used for tabular results
+    "notebook>=7.0.0", # Runs Jupyter notebooks locally
+    "ipykernel>=6.0.0", # Connects your Python environment to Jupyter
+    "keyring>=25.7.0",
 ]
